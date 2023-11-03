@@ -1,0 +1,12 @@
+MODEL:
+  TYPE: deit
+  NAME: deit_teacher
+  DEIT:
+    EMBED_DIM: 384
+    DEPTH: 12
+    NUM_HEADS: 6
+    PATCH_SIZE: 16
+  
+AUG:
+  MIXUP: 0.0
+  CUTMIX: 0.0
