@@ -57,19 +57,30 @@ Juse simply use the `wget` or `curl` to get the weights. The following is the ex
 wget https://dl.fbaipublicfiles.com/deit/deit_small_patch16_224-cd65a155.pth
 ```
 
+Then, run the following command to preprocess the pretrained weight for following supernet training
+```
+python supernet.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --pretrained ./deit_small_patch16_224-cd65a155.pth
+```
 
 ## Prepare Distillation Logits
 In our searching framework, we conduct the knowledge distillation in an offline manner following [TinyViT](https://github.com/microsoft/Cream/tree/main/TinyViT), user can refer to TinyViT for more detail. To generate the logits using the uncompressed model itself as a teacher, run the following command:
 ```
-python -m torch.distributed.launch --nproc_per_node 8 save_logits.py --cfg configs/teacher/deit_s.yaml --data-path /imagenet --batch-size 128 --eval --resume ./deit_small_patch16_224-cd65a155.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_s
+python -m torch.distributed.launch --nproc_per_node 8 save_logits.py --cfg configs/teacher/deit_b.yaml --data-path /imagenet --batch-size 128 --eval --resume ./deit_small_patch16_224-cd65a155.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
 ```
 The above we run the inference to generate the prediction logits given the training data with data augmentation and save it.
+
 
 ## Train Supernet
 To train the supernet, run the following command:
 ```
-python -m torch.distributed.launch --nproc_per_node=8 main.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet_v2_local_search.yaml --data-path /dev/shm/imagenet --batch-size 128 --resume weights/lr_deit_base_supernet.pth --output deit_base_local_search --tag t35_v50_s25 --use-wandb --opts DISTILL.TEACHER_LOGITS_PATH /dev/shm/teacher_logits/
+python -m torch.distributed.launch --nproc_per_node=8 main.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --data-path /imagenet --batch-size 128 --resume weights/lr_deit_base_supernet.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
 ```
+
+## Search Space Filtering
+To be updated
+
+## Evolutionary Search
+To be updated
 
 ## Citation
 ```
