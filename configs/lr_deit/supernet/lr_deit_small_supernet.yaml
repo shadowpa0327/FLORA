@@ -1,6 +1,6 @@
 MODEL:
   TYPE: lr_deit
-  NAME: lr_deit_small_supernet_local_search
+  NAME: lr_deit_small_supernet
   DROP_PATH_RATE: 0.0
   DROP_RATE: 0.0
   DEIT:

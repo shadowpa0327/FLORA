@@ -27,9 +27,6 @@ from data import build_loader
 from logger import create_logger
 from utils import load_checkpoint, NativeScalerWithGradNormCount
 
-from models.remap_layer import RemapLayer
-remap_layer_22kto1k = RemapLayer('./imagenet_1kto22k.txt')
-
 
 def parse_option():
     parser = argparse.ArgumentParser(
