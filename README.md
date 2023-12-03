@@ -54,18 +54,18 @@ Before we start, we have to first get the pretrained weights. The following list
 
 Juse simply use the `wget` or `curl` to get the weights. The following is the example to get the deit-s pretrained weights using `wget`
 ```
-wget https://dl.fbaipublicfiles.com/deit/deit_small_patch16_224-cd65a155.pth
+wget https://dl.fbaipublicfiles.com/deit/deit_base_patch16_224-b5f2ef4d.pth
 ```
 
 Then, run the following command to preprocess the pretrained weight for following supernet training
 ```
-python supernet.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --pretrained ./deit_small_patch16_224-cd65a155.pth
+python supernet.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --pretrained ./deit_base_patch16_224-b5f2ef4d.pth
 ```
 
 ## Prepare Distillation Logits
 In our searching framework, we conduct the knowledge distillation in an offline manner following [TinyViT](https://github.com/microsoft/Cream/tree/main/TinyViT), user can refer to TinyViT for more detail. To generate the logits using the uncompressed model itself as a teacher, run the following command:
 ```
-python -m torch.distributed.launch --nproc_per_node 8 save_logits.py --cfg configs/teacher/deit_b.yaml --data-path /imagenet --batch-size 128 --eval --resume ./deit_small_patch16_224-cd65a155.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
+python -m torch.distributed.launch --nproc_per_node 8 save_logits.py --cfg configs/teacher/deit_b.yaml --data-path imagenet --batch-size 128 --eval --resume ./deit_base_patch16_224-b5f2ef4d.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
 ```
 The above we run the inference to generate the prediction logits given the training data with data augmentation and save it.
 
@@ -73,7 +73,7 @@ The above we run the inference to generate the prediction logits given the train
 ## Train Supernet
 To train the supernet, run the following command:
 ```
-python -m torch.distributed.launch --nproc_per_node=8 main.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --data-path /imagenet --batch-size 128 --resume weights/lr_deit_base_supernet.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
+python -m torch.distributed.launch --nproc_per_node 8 main.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --data-path /imagenet --batch-size 128 --resume lr_deit_base_supernet_local_search.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
 ```
 
 ## Search Space Filtering
