@@ -73,7 +73,7 @@ The above we run the inference to generate the prediction logits given the train
 ## Train Supernet
 To train the supernet, run the following command:
 ```
-python -m torch.distributed.launch --nproc_per_node 8 main.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --data-path /imagenet --batch-size 128 --resume lr_deit_base_supernet_local_search.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
+python -m torch.distributed.launch --nproc_per_node 8 main.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --data-path /imagenet --batch-size 128 --resume lr_deit_base_supernet.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
 ```
 
 ## Search Space Filtering
