@@ -91,7 +91,14 @@ python -m torch.distributed.launch --nproc_per_node 8 main.py \
 ```
 
 ## Evolutionary Search
-To be updated
+```python
+python -m torch.distributed.launch --nproc_per_node=1  evolution_search.py \
+--cfg [Path to supernet configs] \
+--pretrained [Path to the weight of trained supernet] \
+--param-limits [Upper bound of the target GFLOPs] \
+--min-param-limits [Lower bound of the target GFLOPs]\
+--data-path /imagenet
+```
 
 ## Get the subnet
 Once you get the config of seearched subnet, you can leverage the `subnet.py` to slice the weights of subnet from the weight of supernet by running the following command:
