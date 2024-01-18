@@ -118,7 +118,7 @@ class Attention(nn.Module):
         # Since the deit model supernet has proj to be LRlinear but with choices to be [1.0], 
         # when fusing with the subnet.py, the proj will become proj.fc. 
         # Here, I temporarily set the self.proj to be LRLinear so that the weight can be loaded
-        self.proj = LRLinear(1.0, dim, dim)
+        self.proj = nn.Linear(dim, dim)
         self.qkv = LRLinear(ratio, dim, dim * 3, bias = qkv_bias)
         self.attn_drop = nn.Dropout(attn_drop)
         self.proj_drop = nn.Dropout(proj_drop)

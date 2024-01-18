@@ -81,6 +81,20 @@ python -m torch.distributed.launch --nproc_per_node 8 main.py --cfg configs/lr_d
 ## Evolutionary Search
 To be updated
 
+## Get the subnet
+Once you get the config of seearched subnet, you can leverage the `subnet.py` to slice the weights of subnet from the weight of supernet by running the following command:
+```
+python subnet.py --cfg configs/lr_deit/subnet/lr_deit_base_subnet_81.85_8.04G.yml \
+--pretrained [Path to supernet]
+```
+
+After you get the weights of subnet then you can use the `main.py` to evaluate the accuracy of the searched subnet.
+```
+python -m torch.distributed.launch --nproc_per_node=1  main.py --cfg configs/lr_deit/subnet/lr_deit_base_subnet_81.85_8.04G.yml --pretrained lr_deit_subnet_81.85_8.04G.pth --eval --data-path /dataset/imagenet/
+```
+
+
+
 ## Citation
 ```
 To be done
