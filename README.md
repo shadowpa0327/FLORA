@@ -65,7 +65,13 @@ python supernet.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --p
 ## Prepare Distillation Logits
 In our searching framework, we conduct the knowledge distillation in an offline manner following [TinyViT](https://github.com/microsoft/Cream/tree/main/TinyViT), user can refer to TinyViT for more detail. To generate the logits using the uncompressed model itself as a teacher, run the following command:
 ```
-python -m torch.distributed.launch --nproc_per_node 8 save_logits.py --cfg configs/teacher/deit_b.yaml --data-path imagenet --batch-size 128 --eval --resume ./deit_base_patch16_224-b5f2ef4d.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
+python -m torch.distributed.launch --nproc_per_node 8 save_logits.py \
+--cfg configs/teacher/deit_b.yaml \
+--data-path /imagenet \
+--batch-size 128 \
+--eval \
+--resume ./deit_base_patch16_224-b5f2ef4d.pth \
+--opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
 ```
 The above we run the inference to generate the prediction logits given the training data with data augmentation and save it.
 
@@ -74,8 +80,13 @@ To be updated
 
 ## Train Supernet
 To train the supernet, run the following command:
-```
-python -m torch.distributed.launch --nproc_per_node 8 main.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --data-path /imagenet --batch-size 128 --resume lr_deit_base_supernet.pth --opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
+```python
+python -m torch.distributed.launch --nproc_per_node 8 main.py \
+--cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml \
+--data-path /imagenet \
+--batch-size 128 \
+--resume lr_deit_base_supernet.pth \
+--opts DISTILL.TEACHER_LOGITS_PATH ./teacher_logits_deit_b
 ```
 
 ## Evolutionary Search
@@ -83,13 +94,13 @@ To be updated
 
 ## Get the subnet
 Once you get the config of seearched subnet, you can leverage the `subnet.py` to slice the weights of subnet from the weight of supernet by running the following command:
-```
+```python
 python subnet.py --cfg [Path to subnet configs] \
 --pretrained [Path to the weights of supernet]
 ```
 
 After you get the weights of subnet then you can use the `main.py` to evaluate the accuracy of the searched subnet.
-```
+```python
 python -m torch.distributed.launch --nproc_per_node=1  \
 main.py --cfg [Path to the subnet configs] \
 --pretrained [Path to the weights of subnet] \
