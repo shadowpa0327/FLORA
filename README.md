@@ -58,13 +58,14 @@ wget https://dl.fbaipublicfiles.com/deit/deit_base_patch16_224-b5f2ef4d.pth
 ```
 
 Then, run the following command to preprocess the pretrained weight for following supernet training
-```
-python supernet.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml --pretrained ./deit_base_patch16_224-b5f2ef4d.pth
+```python
+python supernet.py --cfg configs/lr_deit/supernet/lr_deit_base_supernet.yaml \
+--pretrained ./deit_base_patch16_224-b5f2ef4d.pth
 ```
 
 ## Prepare Distillation Logits
 In our searching framework, we conduct the knowledge distillation in an offline manner following [TinyViT](https://github.com/microsoft/Cream/tree/main/TinyViT), user can refer to TinyViT for more detail. To generate the logits using the uncompressed model itself as a teacher, run the following command:
-```
+```python
 python -m torch.distributed.launch --nproc_per_node 8 save_logits.py \
 --cfg configs/teacher/deit_b.yaml \
 --data-path /imagenet \
@@ -107,6 +108,15 @@ main.py --cfg [Path to the subnet configs] \
 --eval \
 --data-path /imagenet
 ```
+
+## Checkpoint of subnets
+
+Table provide below present the evaluation result of our search low-rank architecture and its checkpoint.
+
+| name | acc@1 | acc@5 | #params | checkpoint url |
+| --- | --- | --- | --- | --- |
+| lr_deit_small | 72.2 | 94.62 | 12.6M | [google drive](https://drive.google.com/file/d/1j5ZJ0xO0looiClAwxOMm_AxdZIQUjzTH/view?usp=drive_link) |
+| lr_deit_base | 81.8 | 95.54 | 38M| [google drive](https://drive.google.com/file/d/104tGK8hyINF3IeTilAbftkshT-EzRM2k/view?usp=drive_link) |
 
 
 
