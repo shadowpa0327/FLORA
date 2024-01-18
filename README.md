@@ -84,20 +84,31 @@ To be updated
 ## Get the subnet
 Once you get the config of seearched subnet, you can leverage the `subnet.py` to slice the weights of subnet from the weight of supernet by running the following command:
 ```
-python subnet.py --cfg configs/lr_deit/subnet/lr_deit_base_subnet_81.85_8.04G.yml \
---pretrained [Path to supernet]
+python subnet.py --cfg [Path to subnet configs] \
+--pretrained [Path to the weights of supernet]
 ```
 
 After you get the weights of subnet then you can use the `main.py` to evaluate the accuracy of the searched subnet.
 ```
-python -m torch.distributed.launch --nproc_per_node=1  main.py --cfg configs/lr_deit/subnet/lr_deit_base_subnet_81.85_8.04G.yml --pretrained lr_deit_subnet_81.85_8.04G.pth --eval --data-path /dataset/imagenet/
+python -m torch.distributed.launch --nproc_per_node=1  \
+main.py --cfg [Path to the subnet configs] \
+--pretrained [Path to the weights of subnet] \
+--eval \
+--data-path /imagenet
 ```
 
 
 
 ## Citation
-```
-To be done
+```bibtex
+@InProceedings{Chang_2024_WACV,
+    author    = {Chang, Chi-Chih and Sung, Yuan-Yao and Yu, Shixing and Huang, Ning-Chi and Marculescu, Diana and Wu, Kai-Chiang},
+    title     = {FLORA: Fine-Grained Low-Rank Architecture Search for Vision Transformer},
+    booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+    month     = {January},
+    year      = {2024},
+    pages     = {2482-2491}
+}
 ```
 
 ## Acknowledgement
